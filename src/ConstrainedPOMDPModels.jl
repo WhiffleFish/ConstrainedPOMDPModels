@@ -8,4 +8,10 @@ using POMDPTools
 using Random
 using Compose
 
+include("gridworld.jl")
+export ConstrainedGridWorldPOMDP
+
+include("simulator.jl")
+export ConstrainedDisplaySimulator
+
 end # module ConstrainedPOMDPModels

@@ -1,1 +1,3 @@
 using ConstrainedPOMDPModels
+
+ConstrainedGridWorldPOMDP()
