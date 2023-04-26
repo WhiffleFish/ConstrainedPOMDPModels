@@ -14,4 +14,7 @@ export ConstrainedGridWorldPOMDP
 include("simulator.jl")
 export ConstrainedDisplaySimulator
 
+include("trivial.jl")
+export TrivialCMDP, TrivialCPOMDP
+
 end # module ConstrainedPOMDPModels
