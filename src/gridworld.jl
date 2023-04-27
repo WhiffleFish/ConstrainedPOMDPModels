@@ -30,7 +30,7 @@ function POMDPs.observation(m::GridWorldPOMDP,a,sp)
     P = sizehint!(Float64[], 9)
     for move ∈ NEAR
         near_state = sp + move
-        if all(SA[0,0] .< near_state .< m.mdp.size)
+        if all(SA[1,1] .≤ near_state .≤ m.mdp.size)
             push!(S, near_state)
             p = move == SA[0,0] ? m.obs_prob : 1 - m.obs_prob
             push!(P,p)
