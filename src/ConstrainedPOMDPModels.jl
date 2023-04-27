@@ -15,6 +15,6 @@ include("simulator.jl")
 export ConstrainedDisplaySimulator
 
 include("trivial.jl")
-export TrivialCMDP, TrivialCPOMDP
+export TrivialCMDP, TrivialCPOMDP, ToyCPOMDP
 
 end # module ConstrainedPOMDPModels
