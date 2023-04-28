@@ -30,5 +30,6 @@ include("maze.jl")
 include("minihall.jl")
 
 include("rocksample.jl")
+export RockSampleCPOMDP
 
 end # module ConstrainedPOMDPModels
