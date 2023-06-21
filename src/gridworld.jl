@@ -1,26 +1,13 @@
 struct GridWorldPOMDP <: POMDP{GWPos,Symbol,GWPos}
     mdp::SimpleGridWorld
     obs_prob::Float64
-    costs::Dict{GWPos, SVector{1,Float64}}
 end
 
-function GridWorldPOMDP(;obs_prob=0.9, costs=Dict{GWPos,SVector{1,Float64}}(), kwargs...)
-    GridWorldPOMDP(SimpleGridWorld(;kwargs...),obs_prob, costs)
+function GridWorldPOMDP(;obs_prob=0.9, kwargs...)
+    GridWorldPOMDP(SimpleGridWorld(;kwargs...),obs_prob)
 end
 
-POMDPs.transition(m::GridWorldPOMDP,s,a) = transition(m.mdp,s,a)
-POMDPs.reward(m::GridWorldPOMDP,s,a) = reward(m.mdp,s,a)
-POMDPs.discount(m::GridWorldPOMDP) = discount(m.mdp)
-POMDPs.actionindex(m::GridWorldPOMDP, a) = actionindex(m.mdp, a)
-POMDPs.stateindex(m::GridWorldPOMDP, s) = stateindex(m.mdp, s)
-POMDPs.actions(m::GridWorldPOMDP) = actions(m.mdp)
-POMDPs.states(m::GridWorldPOMDP) = states(m.mdp)
-POMDPs.initialstate(m::GridWorldPOMDP) = Deterministic(GWPos(2,2))
-POMDPTools.ordered_states(m::GridWorldPOMDP) = ordered_states(m.mdp)
-POMDPTools.ordered_actions(m::GridWorldPOMDP) = ordered_actions(m.mdp)
-POMDPs.observations(w::GridWorldPOMDP) = states(w.mdp)
-POMDPTools.ordered_observations(m::GridWorldPOMDP) = observations(m)
-POMDPs.isterminal(m::GridWorldPOMDP,s) = POMDPs.isterminal(m.mdp,s)
+@MDP_forward GridWorldPOMDP.mdp
 
 const NEAR = [SA[i,j] for i ∈ (-1,0,1), j ∈ (-1,0,1)]
 
@@ -40,25 +27,36 @@ function POMDPs.observation(m::GridWorldPOMDP,a,sp)
     return SparseCat(S,P)
 end
 
+POMDPs.observations(m::GridWorldPOMDP) = states(m)
 POMDPs.obsindex(m::GridWorldPOMDP, o) = stateindex(m,o)
 
-const ConstrainedGridWorld = typeof(ConstrainedPOMDPs.Constrain(GridWorldPOMDP(),[0.0]))
-
-function ConstrainedGridWorldPOMDP(d::AbstractVector=[2.0]; kwargs...)
-    return ConstrainedPOMDPs.Constrain(GridWorldPOMDP(;kwargs...), d)
+struct GridWorldCPOMDP{V<:AbstractVector} <: CPOMDP{GWPos, Symbol, GWPos}
+    pomdp::GridWorldPOMDP
+    costs::Dict{GWPos, SVector{1,Float64}}
+    constraints::V
 end
 
-function ConstrainedPOMDPs.cost(constrained::ConstrainedGridWorld, s, a)
-    pomdp = constrained.m
+@POMDP_forward GridWorldCPOMDP.pomdp
+
+function GridWorldCPOMDP(ĉ=SA[1.0]; costs=Dict{GWPos,SVector{1,Float64}}(), kwargs...)
+    return GridWorldCPOMDP(GridWorldPOMDP(;kwargs...), costs, ĉ)
+end
+
+const ConstrainedGridWorldPOMDP = GridWorldCPOMDP
+
+function ConstrainedPOMDPs.cost(constrained::GridWorldCPOMDP, s, a)
+    pomdp = constrained.pomdp
     mdp = pomdp.mdp
     return if 1 ∈ s || mdp.size[1] ∈ s
         SA[1.0]
     else
-        get(pomdp.costs, s, SA[0.0])
+        get(constrained.costs, s, SA[0.0])
     end
 end
 
-function POMDPTools.ModelTools.render(c_pomdp::ConstrainedGridWorld, step)
+ConstrainedPOMDPs.constraints(m::GridWorldCPOMDP) = m.constraints
+
+function POMDPTools.ModelTools.render(c_pomdp::GridWorldCPOMDP, step)
     pomdp = c_pomdp.m
     mdp = pomdp.mdp
     nx, ny = mdp.size

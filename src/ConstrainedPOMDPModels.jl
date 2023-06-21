@@ -8,6 +8,10 @@ using POMDPTools
 using Random
 using Compose
 using RockSample
+using Lazy
+
+include("forward.jl")
+export @MDP_forward, @POMDP_forward
 
 include("gridworld.jl")
 export ConstrainedGridWorldPOMDP

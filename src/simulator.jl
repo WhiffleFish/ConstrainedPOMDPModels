@@ -9,7 +9,7 @@ sleep_until(t) = sleep(max(t-time(), 0.0))
 
 function POMDPs.simulate(
         sim::ConstrainedDisplaySimulator,
-        pomdp::ConstrainedPOMDPWrapper,
+        pomdp::CPOMDPWrapper,
         policy,
         bu=DiscreteUpdater(pomdp)
     )

@@ -16,19 +16,15 @@ POMDPs.initialstate(::TrivialMDP)       = Deterministic(1)
 POMDPs.stateindex(::TrivialMDP, s)      = s
 POMDPs.actionindex(::TrivialMDP, a)     = a === :left ? 1 : 2
 
-TrivialCMDP(ĉ=[0.5];kwargs...) = Constrain(TrivialMDP(;kwargs...), ĉ)
-TrivialCPOMDP(ĉ=[0.5];kwargs...) = Constrain(FullyObservablePOMDP(TrivialMDP(;kwargs...)), ĉ)
-
-const TrivialCMDP_type = typeof(TrivialCMDP([0.]))
-const TrivialCPOMDP_type = typeof(TrivialCPOMDP([0.]))
+TrivialCMDP(ĉ=[0.5];kwargs...) = constrain(TrivialMDP(;kwargs...), ĉ) do s,a
+    a === :right ? 1.0 : 0.0
+end
+TrivialCPOMDP(ĉ=[0.5];kwargs...) = constrain(FullyObservablePOMDP(TrivialMDP(;kwargs...)), ĉ) do s,a
+    a === :right ? 1.0 : 0.0
+end
 
 # TODO: Remove once https://github.com/JuliaPOMDP/POMDPs.jl/issues/480 is merged and registered
-POMDPs.obsindex(p::FullyObservablePOMDP, o) = stateindex(p,o)
-
-ConstrainedPOMDPs.cost(::TrivialCMDP_type, s, a) = a === :right ? 1.0 : 0.0
-ConstrainedPOMDPs.cost(::TrivialCPOMDP_type, s, a) = a === :right ? 1.0 : 0.0
-
-
+# POMDPs.obsindex(p::FullyObservablePOMDP, o) = stateindex(p,o)
 
 ## from https://cs.uwaterloo.ca/~ppoupart/publications/constrained-pomdps/constrained-pomdps.pdf
 
@@ -68,10 +64,6 @@ end
 
 POMDPs.observation(::ToyPOMDP, a, sp) = Deterministic(1) # FIXME: really??
 
-ToyCPOMDP(ĉ=[0.95];kwargs...) = Constrain(ToyPOMDP(;kwargs...), ĉ)
-
-const ToyCPOMDP_type = typeof(ToyCPOMDP([0.]))
-
-function ConstrainedPOMDPs.cost(::ToyCPOMDP_type, s, a)
-    return ((s === 1 || s === 2) && a === 2) ? 1.0 : 0.0
+ToyCPOMDP(ĉ=[0.95];kwargs...) = constrain(ToyPOMDP(;kwargs...), ĉ) do s,a
+    ((s === 1 || s === 2) && a === 2) ? 1.0 : 0.0
 end

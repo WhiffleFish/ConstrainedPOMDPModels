@@ -1,4 +1,4 @@
-function has_consistent_cost(pomdp::ConstrainedPOMDPs.ConstrainWrapper)
+function has_consistent_cost(pomdp::Union{CMDP, CPOMDP})
     consistent = true
     for s ∈ states(pomdp)
         for a ∈ actions(pomdp)
