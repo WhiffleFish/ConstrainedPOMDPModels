@@ -28,8 +28,7 @@ function POMDPs.simulate(
 
         a = action(policy, b, d)
         prevs = s
-        c = cost(pomdp,s,a)
-        s, o, r = @gen(:sp,:o,:r)(pomdp.m, s, a, sim.rng)
+        s, o, r, c = @gen(:sp,:o,:r,:c)(pomdp.m, s, a, sim.rng)
         sim.verbose && println("step: $i -- s: $prevs, a: $a, sp: $s")
         r_total += γ*r
         cost_tot += γ*c

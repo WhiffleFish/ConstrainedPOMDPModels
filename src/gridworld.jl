@@ -44,7 +44,7 @@ end
 
 const ConstrainedGridWorldPOMDP = GridWorldCPOMDP
 
-function ConstrainedPOMDPs.cost(constrained::GridWorldCPOMDP, s, a)
+function ConstrainedPOMDPs.costs(constrained::GridWorldCPOMDP, s, a)
     pomdp = constrained.pomdp
     mdp = pomdp.mdp
     return if 1 ∈ s || mdp.size[1] ∈ s

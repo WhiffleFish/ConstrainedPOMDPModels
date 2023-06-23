@@ -9,7 +9,7 @@ RockSampleCPOMDP(ĉ=SA[0.5]; kwargs...) = RockSampleCPOMDP(RockSamplePOMDP(;kwa
 
 ConstrainedPOMDPs.constraints(p::RockSampleCPOMDP) = p.constraints
 
-function ConstrainedPOMDPs.cost(p::RockSampleCPOMDP, s, a)
+function ConstrainedPOMDPs.costs(p::RockSampleCPOMDP, s, a)
     pomdp = p.pomdp
     c = 0.0
     if a > RockSample.N_BASIC_ACTIONS # using sensor
