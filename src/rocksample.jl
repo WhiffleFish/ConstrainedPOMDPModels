@@ -1,16 +1,16 @@
 struct RockSampleCPOMDP{K,V<:AbstractVector} <: CPOMDP{RSState{K},Int,Int}
-    pomdp::RockSamplePOMDP{K}
+    m::RockSamplePOMDP{K}
     constraints::V
 end
 
-@POMDP_forward RockSampleCPOMDP.pomdp
+@POMDP_forward RockSampleCPOMDP.m
 
-RockSampleCPOMDP(ĉ=SA[0.5]; kwargs...) = RockSampleCPOMDP(RockSamplePOMDP(;kwargs...),ĉ)
+RockSampleCPOMDP(ĉ=[0.5]; kwargs...) = RockSampleCPOMDP(RockSamplePOMDP(;kwargs...),ĉ)
 
 ConstrainedPOMDPs.constraints(p::RockSampleCPOMDP) = p.constraints
 
 function ConstrainedPOMDPs.costs(p::RockSampleCPOMDP, s, a)
-    pomdp = p.pomdp
+    pomdp = p.m
     c = 0.0
     if a > RockSample.N_BASIC_ACTIONS # using sensor
         c += 1.0
