@@ -29,6 +29,7 @@ include("hallway.jl")
 include("maze.jl")
 
 include("minihall.jl")
+export MiniHallCPOMDP
 
 include("rocksample.jl")
 export RockSampleCPOMDP
