@@ -6,8 +6,6 @@ end
 
 ModMiniHall() = ModMiniHall(MiniHallway())
 
-@POMDP_forward ModMiniHall.m
-
 POMDPs.actions(p::ModMiniHall) = 1:4
 POMDPs.actionindex(p::ModMiniHall, a::Int)::Int = a
 
@@ -25,8 +23,25 @@ function POMDPs.transition(p::ModMiniHall, ss::Int, a::Int)
     end
 end
 
+POMDPs.observations(m::ModMiniHall) = observations(m.m)
+POMDPs.observation(m::ModMiniHall,s::Int,a::Int) = observation(m.m,s,a)
+POMDPs.obsindex(m::ModMiniHall,o::Int) = obsindex(m.m,o)
+
 POMDPs.reward(m::ModMiniHall, ss::Int, a::Int, sp::Int) = float(ss != sp && sp == 13)*1000.0
-POMDPs.discount(m::ModMiniHall) = 0.95
+POMDPs.reward(m::ModMiniHall, ss::Int, a::Int) = POMDPModels.mean_reward(m::ModMiniHall, ss::Int, a::Int)
+
+POMDPs.discount(m::ModMiniHall) = 0.999
+
+POMDPs.states(m::ModMiniHall) = 1:13
+POMDPs.stateindex(m::ModMiniHall,s::Int) = s
+
+POMDPs.initialstate(m::ModMiniHall) = initialstate(m.m)
+
+POMDPTools.ordered_states(m::ModMiniHall) = collect(1:13)
+POMDPTools.ordered_actions(m::ModMiniHall) = collect(1:4)
+POMDPTools.ordered_observations(m::ModMiniHall) = ordered_observations(m.m)
+
+POMDPs.isterminal(m::ModMiniHall,s::Int) = s==13
 
 ##Constrained
 struct MiniHallCPOMDP{V<:AbstractVector} <: CPOMDP{Int,Int,Int}
