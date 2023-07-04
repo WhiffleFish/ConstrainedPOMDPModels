@@ -1,17 +1,19 @@
 #Building on https://github.com/JuliaPOMDP/POMDPModels.jl/blob/master/src/MiniHallway.jl
 #Similar to MiniHallway in https://jair.org/index.php/jair/article/view/11216/26427
-
-struct MiniHallCPOMDP{V<:AbstractVector} <: CPOMDP{Int,Int,Int}
+struct ModMiniHall <: POMDP{Int, Int, Int}
     m::MiniHallway
-    constraints::V
 end
 
-POMDPs.actions(p::MiniHallway) = 1:4
-POMDPs.actionindex(p::MiniHallway, a::Int)::Int = a
+ModMiniHall() = ModMiniHall(MiniHallway())
 
-function POMDPs.transition(p::MiniHallway, ss::Int, a::Int)
+@POMDP_forward ModMiniHall.m
+
+POMDPs.actions(p::ModMiniHall) = 1:4
+POMDPs.actionindex(p::ModMiniHall, a::Int)::Int = a
+
+function POMDPs.transition(p::ModMiniHall, ss::Int, a::Int)
     if a == 1 || ss == 13
-        return p.T[ss]
+        return p.m.T[ss]
     else
         if a == 2
             return ss % 4 == 0 ? Deterministic(ss - 3) : Deterministic(ss + 1)
@@ -23,12 +25,18 @@ function POMDPs.transition(p::MiniHallway, ss::Int, a::Int)
     end
 end
 
-POMDPs.reward(m::MiniHallway, ss::Int, a::Int, sp::Int) = float(ss != sp && sp == 13)*1000.0
-POMDPs.discount(m::MiniHallway) = 0.95
+POMDPs.reward(m::ModMiniHall, ss::Int, a::Int, sp::Int) = float(ss != sp && sp == 13)*1000.0
+POMDPs.discount(m::ModMiniHall) = 0.95
+
+##Constrained
+struct MiniHallCPOMDP{V<:AbstractVector} <: CPOMDP{Int,Int,Int}
+    m::ModMiniHall
+    constraints::V
+end
 
 @POMDP_forward MiniHallCPOMDP.m
 
-MiniHallCPOMDP(ĉ=[1.0]; kwargs...) = MiniHallCPOMDP(MiniHallway(;kwargs...),ĉ)
+MiniHallCPOMDP(ĉ=[1.0]; kwargs...) = MiniHallCPOMDP(ModMiniHall(;kwargs...),ĉ)
 
 ConstrainedPOMDPs.constraints(p::MiniHallCPOMDP) = p.constraints
 

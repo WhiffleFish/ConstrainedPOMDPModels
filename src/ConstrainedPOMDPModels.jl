@@ -9,6 +9,7 @@ using Random
 using Compose
 using RockSample
 using Lazy
+using LinearAlgebra
 
 include("gridworld.jl")
 export ConstrainedGridWorldPOMDP
@@ -23,13 +24,14 @@ include("trivial.jl")
 export TrivialCMDP, TrivialCPOMDP, ToyCPOMDP
 
 include("cheese.jl")
+export CheeseMazePOMDP, CheeseMazeCPOMDP
 
 include("hallway.jl")
 
 include("maze.jl")
 
 include("minihall.jl")
-export MiniHallCPOMDP
+export ModMiniHall, MiniHallCPOMDP
 
 include("rocksample.jl")
 export RockSampleCPOMDP

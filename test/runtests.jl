@@ -10,3 +10,4 @@ using Test
 include("gridworld.jl")
 include("trivial.jl")
 include("rocksample.jl")
+include("minihall.jl")
