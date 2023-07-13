@@ -27,8 +27,14 @@ POMDPs.observations(m::ModMiniHall) = observations(m.m)
 POMDPs.observation(m::ModMiniHall,s::Int,a::Int) = observation(m.m,s,a)
 POMDPs.obsindex(m::ModMiniHall,o::Int) = obsindex(m.m,o)
 
-POMDPs.reward(m::ModMiniHall, ss::Int, a::Int, sp::Int) = float(ss != sp && sp == 13)*1000.0
-POMDPs.reward(m::ModMiniHall, ss::Int, a::Int) = POMDPModels.mean_reward(m::ModMiniHall, ss::Int, a::Int)
+# POMDPs.reward(m::ModMiniHall, ss::Int, a::Int, sp::Int) = float(ss != sp && sp == 13)*1000.0
+
+function POMDPs.reward(m::ModMiniHall, ss::Int, a::Int, sp::Int)
+    flag = a < 4
+    return -151.0*flag+float(ss != sp && sp == 13)*1000.0
+end
+
+POMDPs.reward(m::ModMiniHall, ss::Int, a::Int) = POMDPTools.ModelTools.mean_reward(m::ModMiniHall, ss::Int, a::Int)
 
 POMDPs.discount(m::ModMiniHall) = 0.999
 
