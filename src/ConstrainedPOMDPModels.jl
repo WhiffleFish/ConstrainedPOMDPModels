@@ -29,6 +29,7 @@ export CheeseMazePOMDP, CheeseMazeCPOMDP
 include("hallway.jl")
 
 include("maze.jl")
+export Maze20POMDP, Maze20CPOMDP
 
 include("minihall.jl")
 export ModMiniHall, MiniHallCPOMDP
