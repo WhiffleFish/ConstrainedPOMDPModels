@@ -152,21 +152,23 @@ function Maze20POMDP()
     return Maze20POMDP([T_1,T_2,T_3,T_4,T_57],[O_14,O_5,O_6],(:N,:S,:E,:W))
 end
 
-POMDPs.states(m::Maze20POMDP) = 1:20
+POMDPs.states(m::Maze20POMDP) = 1:21
 POMDPs.stateindex(m::Maze20POMDP,s::Int) = s 
 POMDPs.actions(m::Maze20POMDP) = 1:7
 POMDPs.actionindex(m::Maze20POMDP,a::Int) = a
 
 function POMDPs.transition(m::Maze20POMDP, s::Int, a::Int)
-    if a < 5
-        return SparseCat(1:20,m.T[a][s,:])
+    if a < 5 && s != 7
+        return SparseCat(1:21,vcat(m.T[a][s,:],0.0))
+    elseif s != 7
+        return SparseCat(1:21,vcat(m.T[5][s,:],0.0))
     else
-        return SparseCat(1:20,m.T[5][s,:])
+        return SparseCat(1:21,vcat(zeros(20),1.0))
     end
 end
 
 function POMDPs.reward(m::Maze20POMDP,s::Int,a::Int,sp::Int)
-    if s!=sp && sp==7
+    if s!=sp && s==7
         return 1000.0
     else
         return 0.0
@@ -176,18 +178,20 @@ end
 POMDPs.reward(m::Maze20POMDP,s::Int,a::Int) = POMDPTools.ModelTools.mean_reward(m,s,a)
 
 function POMDPs.observation(m::Maze20POMDP, a::Int, sp::Int)
-    if a < 5
-        return SparseCat(1:8,m.O[1][sp,:])
-    else
-        return SparseCat(1:8,m.O[a-4][sp,:])
+    if a < 5 && sp != 21
+        return SparseCat(1:9,vcat(m.O[1][sp,:],0.0))
+    elseif sp != 21
+        return SparseCat(1:9,vcat(m.O[a-4][sp,:],0.0))
+    else 
+        return SparseCat(1:9,vcat(zeros(8),1.0))
     end
 end
-POMDPs.observations(m::Maze20POMDP) = 1:8
+POMDPs.observations(m::Maze20POMDP) = 1:9
 POMDPs.obsindex(m::Maze20POMDP,o::Int) = o
 
 
 POMDPs.initialstate(m::Maze20POMDP) = SparseCat(1:20,append!([0.3,0.0,0.0,0.0,0.3],fill(0,14),0.4)) #From MiniHallway.jl
-POMDPs.isterminal(m::Maze20POMDP,s::Int) = s==7
+POMDPs.isterminal(m::Maze20POMDP,s::Int) = s==21
 POMDPs.discount(m::Maze20POMDP) = 0.9999
 
 ##Constrained
