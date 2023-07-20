@@ -36,7 +36,7 @@ end
 
 POMDPs.reward(m::ModMiniHall, ss::Int, a::Int) = POMDPTools.ModelTools.mean_reward(m::ModMiniHall, ss::Int, a::Int)
 
-POMDPs.discount(m::ModMiniHall) = 0.999
+POMDPs.discount(m::ModMiniHall) = 0.9999
 
 POMDPs.states(m::ModMiniHall) = 1:13
 POMDPs.stateindex(m::ModMiniHall,s::Int) = s

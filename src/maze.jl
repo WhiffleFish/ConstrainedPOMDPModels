@@ -158,9 +158,9 @@ POMDPs.actions(m::Maze20POMDP) = 1:7
 POMDPs.actionindex(m::Maze20POMDP,a::Int) = a
 
 function POMDPs.transition(m::Maze20POMDP, s::Int, a::Int)
-    if a < 5 && s != 7
+    if a < 5 && s != 7 && s != 21
         return SparseCat(1:21,vcat(m.T[a][s,:],0.0))
-    elseif s != 7
+    elseif s != 7 && s != 21
         return SparseCat(1:21,vcat(m.T[5][s,:],0.0))
     else
         return SparseCat(1:21,vcat(zeros(20),1.0))
@@ -168,7 +168,7 @@ function POMDPs.transition(m::Maze20POMDP, s::Int, a::Int)
 end
 
 function POMDPs.reward(m::Maze20POMDP,s::Int,a::Int,sp::Int)
-    if s!=sp && s==7
+    if s!=sp && s==7 && a!=7
         return 1000.0
     else
         return 0.0

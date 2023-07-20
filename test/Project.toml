@@ -1,4 +1,5 @@
 [deps]
+ConstrainedPOMDPs = "7a9489b1-4b84-4e64-8108-bdcab6d54d2c"
 NativeSARSOP = "a07c76ea-660d-4c9a-8028-2e6dbd212cb8"
 POMDPTools = "7588e00f-9cae-40de-98dc-e0c70c48cdd7"
 POMDPs = "a93abf59-7444-517b-a68a-c42f96afdd7d"
