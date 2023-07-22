@@ -72,15 +72,15 @@ POMDPs.actions(m::CheeseMazePOMDP) = 1:5
 POMDPs.actionindex(m::CheeseMazePOMDP,a::Int) = a
 
 function POMDPs.transition(m::CheeseMazePOMDP, s::Int, a::Int)
-    if s!=10
+    if s!=11
         return SparseCat(1:11,m.T[a][s,:])
     else
-        return SparseCat(1:11,append!(fill(0.0,9),1.,0.))
+        return SparseCat(1:11,append!(fill(0.0,10),1.))
     end
 end
 
 function POMDPs.reward(m::CheeseMazePOMDP,s::Int,a::Int,sp::Int)
-    if s!=sp && sp==10
+    if s!=sp && sp==11
         return 1000.0
     else
         return 0.0
@@ -97,7 +97,7 @@ POMDPs.obsindex(m::CheeseMazePOMDP,o::Int) = o
 
 
 POMDPs.initialstate(m::CheeseMazePOMDP) = SparseCat(1:11,append!(fill(1/10,10),0.)) #From MiniHallway.jl
-POMDPs.isterminal(m::CheeseMazePOMDP,s::Int) = s==10
+POMDPs.isterminal(m::CheeseMazePOMDP,s::Int) = s==11
 POMDPs.discount(m::CheeseMazePOMDP) = 0.9999
 
 ##Constrained
