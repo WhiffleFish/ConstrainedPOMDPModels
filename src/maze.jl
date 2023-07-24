@@ -171,11 +171,10 @@ function POMDPs.reward(m::Maze20POMDP,s::Int,a::Int,sp::Int)
     r = 0.0
     if s!=sp && s==7 && a!=7
         r += 1000.0
-    end
-    if a < 5
-        r += 4.0
-    elseif a < 6
-        r += 2.0
+    # elseif a < 5
+    #     r += 4.0
+    # elseif a < 7
+    #     r += 2.0
     end
     return r
 end
