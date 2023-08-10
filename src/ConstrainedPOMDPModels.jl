@@ -37,4 +37,7 @@ export ModMiniHall, MiniHallCPOMDP
 include("rocksample.jl")
 export RockSampleCPOMDP
 
+include("querys3.jl")
+export QueryS3POMDP, QueryS3CPOMDP
+
 end # module ConstrainedPOMDPModels
